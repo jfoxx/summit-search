@@ -15,14 +15,23 @@ function copyText(newClip, target) {
   );
 }
 
+function noMatchButton() {
+  const button = document.querySelector('button.frescopia');
+  const success = document.querySelector('button.frescopia ~ span');
+  button.addEventListener('click', () => {
+    copyText('frescopia.coffee', success);
+  });
+}
+
 function performSearch() {
   const searchField = document.getElementById('search');
   const listItems = document.querySelectorAll('#searchResults li');
+  const noMatch = document.querySelector('li.no-match');
   searchField.addEventListener('input', () => {
     const query = searchField.value.trim().toLowerCase();
     // Reset all matches
     listItems.forEach((item) => item.classList.remove('match'));
-
+    noMatch.classList.remove('show');
     if (query.length >= 3) {
       listItems.forEach((item) => {
         const customerValue = item.getAttribute('data-customer').toLowerCase();
@@ -30,6 +39,12 @@ function performSearch() {
           item.classList.add('match');
         }
       });
+      const matched = document.querySelectorAll('#searchResults li.match');
+      if (matched.length < 1) {
+        noMatch.classList.add('show');
+      } else {
+        noMatch.classList.remove('show');
+      }
     }
   });
 }
@@ -61,7 +76,19 @@ export default function decorate(block) {
     ul.append(li);
   });
 
+  const noMatch = document.createElement('li');
+  noMatch.className = 'no-match';
+  const frescopiaButton = document.createElement('button');
+  frescopiaButton.className = 'frescopia';
+  const frescopiaSuccess = document.createElement('span');
+  frescopiaSuccess.className = 'message';
+  noMatch.innerText = 'Time to brew some coffee...';
+  noMatch.dataset.customer = '';
+  noMatch.append(frescopiaButton, frescopiaSuccess);
+  ul.append(noMatch);
+
   block.append(search, ul);
 
   performSearch();
+  noMatchButton();
 }
