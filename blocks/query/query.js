@@ -1,6 +1,6 @@
 import ffetch from '../../scripts/ffetch.js';
 
-const allentries = await ffetch('/sitesoptimizercustomdemos-summit25.json').all();
+const allentries = await ffetch('/sitesoptimizercustomdemos-summit25.json').chunks(1000).all();
 
 function copyText(newClip, target) {
   navigator.clipboard.writeText(newClip).then(
@@ -19,7 +19,7 @@ function noMatchButton() {
   const button = document.querySelector('button.frescopia');
   const success = document.querySelector('button.frescopia ~ span');
   button.addEventListener('click', () => {
-    copyText('frescopia.coffee', success);
+    copyText('frescopa.coffee', success);
   });
 }
 
